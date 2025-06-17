@@ -1,0 +1,148 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Username Page */
+#username-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.username-page-container {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+.username-page-container h1.title {
+    margin-bottom: 25px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+input.form-control {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+button.accent {
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+button.accent:hover {
+    background-color: #1976D2;
+}
+
+/* Chat Page */
+.chat-container {
+    max-width: 800px;
+    margin: 40px auto;
+    background: #ffffffd9;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+}
+
+.chat-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.connecting {
+    text-align: center;
+    color: #555;
+    margin-bottom: 15px;
+}
+
+/* Message Area */
+#messageArea {
+    list-style: none;
+    padding: 0;
+    max-height: 400px;
+    overflow-y: auto;
+    margin-bottom: 15px;
+}
+
+.chat-message, .event-message {
+    display: flex;
+    align-items: flex-start;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    background-color: #f1f1f1;
+}
+
+.event-message {
+    justify-content: center;
+    font-style: italic;
+    background-color: #e0e0e0;
+}
+
+.chat-message i {
+    background-color: #ccc;
+    border-radius: 50%;
+    color: white;
+    font-weight: bold;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+    font-style: normal;
+}
+
+.chat-message span {
+    font-weight: bold;
+}
+
+.chat-message p {
+    margin: 0;
+    margin-left: 5px;
+}
+
+/* Message Form */
+.input-group {
+    display: flex;
+}
+
+.input-group input.form-control {
+    flex: 1;
+    border: 1px solid #ccc;
+    border-radius: 6px 0 0 6px;
+    padding: 10px;
+}
+
+.input-group button.primary {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 0 6px 6px 0;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.input-group button.primary:hover {
+    background-color: #388E3C;
+}

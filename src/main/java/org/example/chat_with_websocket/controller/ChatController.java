@@ -1,7 +1,7 @@
-package org.javatechie.spring.ws.api.controller;
+package org.example.chat_with_websocket.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.javatechie.spring.ws.api.model.ChatMessage;
+import org.example.chat_with_websocket.model.ChatMessage;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;

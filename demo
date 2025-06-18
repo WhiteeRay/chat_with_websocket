@@ -1,0 +1,32 @@
+var socket = new SockJS('http://localhost:8080/ws');
+var stompClient = Stomp.over(socket);
+
+stompClient.connect({}, function (frame){
+    console.log('Connected: ' + frame);
+    stompClient.subscribe('/topic/messages', function(message){
+        const body = JSON.parse(message.body);
+        showMessage(body.response, false);
+    });
+});
+
+function sendMessage(){
+    var messageContent = document.getElementById("inputMessage").value;
+    if(messageContent){
+        showMessage(messageContent, true);
+        stompClient.send("/app/chat", {}, messageContent); // string only
+        document.getElementById("inputMessage").value = '';
+    }
+}
+
+function showMessage(message, isClient){
+    var messageElement = document.createElement('div');
+    var text = document.createElement('p')
+    var date = document.createElement('span');
+    var dateValue = new Date();
+    date.innerText = dateValue.getHours() + ":"+ String(dateValue.getMinutes()).padStart(2, '0');
+    text.innerText = message;
+    messageElement.appendChild(text);
+    messageElement.appendChild(date);
+    messageElement.classList.add(isClient ? "messages_client" : "messages_server");
+    document.getElementById("messages").appendChild(messageElement);
+}

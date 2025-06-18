@@ -17,12 +17,13 @@ var colors = [
 ];
 
 function connect(event) {
+    console.log("Connecting...");
     username = document.querySelector('#name').value.trim();
     if(username){
         usernamePage.classList.add('hidden');
         chatPage.classList.remove('hidden');
 
-        var socket = new SockJS('/javatechie');;
+        var socket = new SockJS('/javatechie');
         stompClient = Stomp.over(socket);
 
         stompClient.connect({},onConnected, onError);
@@ -40,7 +41,7 @@ function onConnected(){
     connectingElement.classList.add('hidden');
 }
 
-function onError(error){
+function onError(){
     connectingElement.textContent='Could not connect to WebSocket server. Please refresh this page to try again!';
     connectingElement.style.color='red';
 }

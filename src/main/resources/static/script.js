@@ -15,20 +15,42 @@ var colors = [
     '#2196F3', '#f32196', '#7FFFD4', '#808080',
     '#8B0000', '#E9967A', '#483D8B', '#E6E6FA'
 ];
+let isRegistering = false;
 
 function connect(event) {
-    username = document.querySelector('#name').value.trim();
-    if(username){
-        usernamePage.classList.add('hidden');
-        chatPage.classList.remove('hidden');
-
-        var socket = new SockJS('/javatechie');;
-        stompClient = Stomp.over(socket);
-
-        stompClient.connect({},onConnected, onError);
-    }
     event.preventDefault();
+
+    if (isRegistering) return;
+    isRegistering = true;
+
+    username = document.querySelector('#name').value.trim();
+
+    if(username){
+        fetch("http://localhost:9090/users", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ name: username })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Не удалось зарегистрировать пользователя");
+            }
+
+            usernamePage.classList.add('hidden');
+            chatPage.classList.remove('hidden');
+
+            var socket = new SockJS('/javatechie');
+            stompClient = Stomp.over(socket);
+            stompClient.connect({}, onConnected, onError);
+        })
+        .catch(error => {
+            alert("Ошибка регистрации: " + error.message);
+        });
+    }
 }
+
 
 function onConnected(){
     stompClient.subscribe('/topic/public', onMessageReceived);
@@ -110,3 +132,5 @@ function getAvatarColor(messageSender){
 
 usernameForm.addEventListener('submit', connect, true);
 messageForm.addEventListener('submit', send, true);
+
+

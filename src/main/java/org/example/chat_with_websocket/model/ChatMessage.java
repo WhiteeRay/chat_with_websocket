@@ -1,8 +1,9 @@
-package org.javatechie.spring.ws.api.model;
+package org.example.chat_with_websocket.model;
 
 
 import lombok.Getter;
 import lombok.Setter;
+
 
 
 @Getter
@@ -16,3 +17,5 @@ public class ChatMessage {
         CHAT,LEAVE,JOIN
     }
 }
+
+

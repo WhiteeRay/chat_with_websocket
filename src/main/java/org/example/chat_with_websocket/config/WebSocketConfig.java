@@ -1,4 +1,4 @@
-package org.javatechie.spring.ws.api.config;
+package org.example.chat_with_websocket.config;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;

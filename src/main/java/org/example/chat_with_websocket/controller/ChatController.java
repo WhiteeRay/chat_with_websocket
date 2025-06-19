@@ -1,23 +1,25 @@
-package org.javatechie.spring.ws.api.controller;
+package org.example.chat_with_websocket.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.javatechie.spring.ws.api.model.ChatMessage;
+import org.example.chat_with_websocket.model.ChatMessage;
+import org.springframework.http.*;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
-
+import org.springframework.web.client.RestTemplate;
 
 @Controller
 @RequiredArgsConstructor
 public class ChatController {
 
-
     @MessageMapping("/chat.register")
     @SendTo("/topic/public")
     public ChatMessage register(@Payload ChatMessage message, SimpMessageHeaderAccessor headerAccessor) {
+        // сохраняем имя в сесшн
         headerAccessor.getSessionAttributes().put("username", message.getSender());
+
         return message;
     }
 
@@ -26,5 +28,4 @@ public class ChatController {
     public ChatMessage sendMessage(@Payload ChatMessage chatMessage) {
         return chatMessage;
     }
-
 }

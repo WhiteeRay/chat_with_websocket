@@ -14,7 +14,7 @@ import (
 type User struct {
     ID    int    `json:"id"`
     Name  string `json:"name"`
-    Email string `json:"email"`
+    Password string `json:"password"`
 }
 
 var db *sql.DB
@@ -30,6 +30,7 @@ func main() {
     r := mux.NewRouter()
 
     r.HandleFunc("/users", CreateUser).Methods("POST")
+    r.HandleFunc("/login", LoginUser).Methods("POST")
     r.HandleFunc("/users", GetUsers).Methods("GET")
     r.HandleFunc("/users/{id}", GetUser).Methods("GET")
     r.HandleFunc("/users/{id}", UpdateUser).Methods("PUT")
@@ -55,7 +56,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
     var user User
     json.NewDecoder(r.Body).Decode(&user)
 
-    err := db.QueryRow("INSERT INTO users(name, email) VALUES($1, $2) RETURNING id", user.Name, user.Email).Scan(&user.ID)
+    err := db.QueryRow("INSERT INTO users(name, password) VALUES($1, $2) RETURNING id", user.Name, user.Password).Scan(&user.ID)
     if err != nil {
         http.Error(w, err.Error(), http.StatusInternalServerError)
         return
@@ -65,7 +66,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetUsers(w http.ResponseWriter, r *http.Request) {
-    rows, err := db.Query("SELECT id, name, email FROM users")
+    rows, err := db.Query("SELECT id, name, password FROM users")
     if err != nil {
         http.Error(w, err.Error(), http.StatusInternalServerError)
         return
@@ -75,7 +76,7 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
     var users []User
     for rows.Next() {
         var u User
-        err := rows.Scan(&u.ID, &u.Name, &u.Email)
+        err := rows.Scan(&u.ID, &u.Name, &u.Password)
         if err != nil {
             http.Error(w, err.Error(), http.StatusInternalServerError)
             return
@@ -95,7 +96,7 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
     }
 
     var user User
-    err = db.QueryRow("SELECT id, name, email FROM users WHERE id=$1", id).Scan(&user.ID, &user.Name, &user.Email)
+    err = db.QueryRow("SELECT id, name, password FROM users WHERE id=$1", id).Scan(&user.ID, &user.Name, &user.Password)
     if err == sql.ErrNoRows {
         http.Error(w, "User not found", http.StatusNotFound)
         return
@@ -118,7 +119,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
     var user User
     json.NewDecoder(r.Body).Decode(&user)
 
-    _, err = db.Exec("UPDATE users SET name=$1, email=$2 WHERE id=$3", user.Name, user.Email, id)
+    _, err = db.Exec("UPDATE users SET name=$1, password=$2 WHERE id=$3", user.Name, user.Password, id)
     if err != nil {
         http.Error(w, err.Error(), http.StatusInternalServerError)
         return
@@ -143,4 +144,30 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
     }
 
     w.WriteHeader(http.StatusNoContent)
+}
+
+func LoginUser(w http.ResponseWriter, r *http.Request) {
+    var creds User
+    err := json.NewDecoder(r.Body).Decode(&creds)
+    if err != nil {
+        http.Error(w, "Invalid request body", http.StatusBadRequest)
+        return
+    }
+
+    var user User
+    err = db.QueryRow("SELECT id, name, password FROM users WHERE name=$1", creds.Name).Scan(&user.ID, &user.Name, &user.Password)
+    if err == sql.ErrNoRows {
+        http.Error(w, "User not found", http.StatusUnauthorized)
+        return
+    } else if err != nil {
+        http.Error(w, err.Error(), http.StatusInternalServerError)
+        return
+    }
+
+    if user.Password != creds.Password {
+        http.Error(w, "Incorrect password", http.StatusUnauthorized)
+        return
+    }
+
+    json.NewEncoder(w).Encode(user)
 }

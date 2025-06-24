@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Auth Page</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url("img.png");
+            background-size: cover;
+            background-position: center;
+            margin: 0;
+            padding: 0;
+        }
+        .auth-container {
+            width: 350px;
+            margin: 100px auto;
+            padding: 30px;
+            background-color: rgba(0, 0, 0, 0.6);
+            border-radius: 12px;
+            color: white;
+            text-align: center;
+        }
+        .form-group {
+            margin: 15px 0;
+        }
+        input {
+            width: 90%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 6px;
+            border: none;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 10px 5px;
+            background-color: #2196F3;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            cursor: pointer;
+        }
+        .toggle-link {
+            color: lightblue;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="auth-container">
+    <h2 id="form-title">Login to White Ray Chat</h2>
+
+    <form id="authForm">
+        <div class="form-group">
+            <input type="text" id="username" placeholder="Username" required />
+        </div>
+        <div class="form-group">
+            <input type="password" id="password" placeholder="Password" required />
+        </div>
+        <div class="form-group">
+            <button type="submit" id="submitBtn">Login</button>
+        </div>
+    </form>
+
+    <p id="toggleText">Don't have an account? <span class="toggle-link" id="toggleMode">Register</span></p>
+</div>
+
+<script>
+    let isLogin = true;
+
+    const form = document.getElementById("authForm");
+    const toggleBtn = document.getElementById("toggleMode");
+    const title = document.getElementById("form-title");
+    const submitBtn = document.getElementById("submitBtn");
+    const toggleText = document.getElementById("toggleText");
+
+    toggleBtn.addEventListener("click", () => {
+        isLogin = !isLogin;
+        if (isLogin) {
+            title.textContent = "Login to White Ray Chat";
+            submitBtn.textContent = "Login";
+            toggleText.innerHTML = `Don't have an account? <span class="toggle-link" id="toggleMode">Register</span>`;
+        } else {
+            title.textContent = "Register to White Ray Chat";
+            submitBtn.textContent = "Register";
+            toggleText.innerHTML = `Already have an account? <span class="toggle-link" id="toggleMode">Login</span>`;
+        }
+        document.getElementById("toggleMode").addEventListener("click", toggleBtn.click);
+    });
+
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const username = document.getElementById("username").value.trim();
+        const password = document.getElementById("password").value.trim();
+
+        if (!username || !password) {
+            alert("Please fill in both fields");
+            return;
+        }
+
+        const endpoint = isLogin ? "http://localhost:9090/login" : "http://localhost:9090/users";
+        const method = "POST";
+
+        try {
+            const response = await fetch(endpoint, {
+                method,
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ name: username, password: password })
+            });
+
+            if (response.ok) {
+                alert(isLogin ? "Login successful!" : "Registration successful!");
+                localStorage.setItem("username", username);
+                window.location.href = "index.html";
+            }
+            else {
+                const text = await response.text();
+                alert("Error: " + text);
+            }
+        } catch (err) {
+            alert("Network error: " + err.message);
+        }
+    });
+</script>
+</body>
+</html>

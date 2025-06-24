@@ -9,7 +9,6 @@ body {
     display: none;
 }
 
-/* Username Page */
 #username-page {
     display: flex;
     justify-content: center;
@@ -23,6 +22,8 @@ body {
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
     text-align: center;
+    display: none;
+    
 }
 
 .username-page-container h1.title {
@@ -31,6 +32,7 @@ body {
 
 .form-group {
     margin-bottom: 15px;
+    
 }
 
 input.form-control {
@@ -75,7 +77,6 @@ button.accent:hover {
     margin-bottom: 15px;
 }
 
-/* Message Area */
 #messageArea {
     list-style: none;
     padding: 0;
@@ -122,7 +123,6 @@ button.accent:hover {
     margin-left: 5px;
 }
 
-/* Message Form */
 .input-group {
     display: flex;
 }

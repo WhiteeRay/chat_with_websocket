@@ -41,7 +41,8 @@ function connect(event) {
             usernamePage.classList.add('hidden');
             chatPage.classList.remove('hidden');
 
-            var socket = new SockJS('/javatechie');
+            var socket = new SockJS('http://localhost:8080/javatechie');
+
             stompClient = Stomp.over(socket);
             stompClient.connect({}, onConnected, onError);
         })
